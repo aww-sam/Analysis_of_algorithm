@@ -1,0 +1,252 @@
+\documentclass{article}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amsmath}
+
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red},
+    showstringspaces=false,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    breaklines=true
+}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper,top=0.8in,bottom=1.0in,left=1.0in]{geometry}
+
+\author{}
+\date{}
+\title{\textbf{Practical 3: Implementation and complexity analysis of algorithms involving divide and conquer strategy}}
+
+\begin{document}
+\maketitle
+
+\vspace{0.1mm}
+\begin{center}
+    \LARGE\textbf{Quicksort Algorithm}\end{center}
+
+
+{\normalsize
+\section*{Objective}
+\begin{itemize}
+    \item The primary objective of Quicksort algoritm is to efficiently sort an arry or a list of elements using divide and conquer strategy.
+    \item To efficiently sort the list or array without requiring additional storage for merginge(unlike mergesort)
+    \item To achieve an average time complexity of O(n logn) while minimizing space overhead.
+\end{itemize}
+
+\section*{Theory}
+\paragraph{} 
+QuickSort is a sorting algorithm based on the Divide and Conquer that picks an element as a pivot and partitions the given array around the picked pivot by placing the pivot in its correct position in the sorted array
+\paragraph{}
+There are mainly three steps in the algorithm:
+\begin{itemize}
+    \item Choose a Pivot: Select an element from the array as the pivot. The choice of pivot can vary (e.g., first element, last element, random element, or median).
+    \item Partition the Array: Re arrange the array around the pivot. After partitioning, all elements smaller than the pivot will be on its left, and all elements greater than the pivot will be on its right.
+    \item Recursively Call: Recursively apply the same process to the two partitioned sub-arrays.
+Base Case: The recursion stops when there is only one element left in the sub-array, as a single element is already sorted.
+\end{itemize}
+\pagebreak
+\section*{Algorithm}
+\begin{algorithm}
+\caption{Quick Sort}
+\begin{algorithmic}[1]
+
+\Procedure{Partition}{$A, low, high$}
+    \State $pivot \gets A[low]$
+    \State $x \gets low + 1$
+    \State $y \gets high$
+    \While{$x \le y$}
+        \While{$x \le high$ \textbf{and} $A[x] \le pivot$}
+            \State $x \gets x + 1$
+        \EndWhile
+        \While{$y \ge low + 1$ \textbf{and} $A[y] \ge pivot$}
+            \State $y \gets y - 1$
+        \EndWhile
+        \If{$x < y$}
+            \State Swap($A[x],A[y]$)
+        \EndIf
+    \EndWhile
+    \State Swap($A[low],A[y]$)
+    \State \Return $y$
+\EndProcedure
+
+\Procedure{QuickSort}{$A, low, high$}
+    \If{$low < high$}
+        \State $p \gets$ \Call{Partition}{$A, low, high$}
+        \State \Call{QuickSort}{$A, low, p-1$}
+        \State \Call{QuickSort}{$A, p+1, high$}
+    \EndIf
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+
+\section*{Python Code}
+\begin{lstlisting}[={}]
+def Partition(A,low,high):
+    pivot=A[low]
+    x=low+1
+    y=high
+
+    while x<=y:
+        while x<=high and A[x]<=pivot :
+            x=x+1
+        while y>=(low+1) and A[y]>=pivot:
+            y=y-1
+        if x<y:
+            A[x],A[y]=A[y],A[x]
+    A[low],A[y]=A[y],A[low]
+    return y
+
+def quickSort(A,low,high):
+    if low<high:
+        p=Partition(A,low,high)
+        quickSort(A,low,p-1)
+        quickSort(A,p+1,high)
+\end{lstlisting}
+
+\subsection*{Output}
+\begin{lstlisting}
+arr=[11,44,63,23,45,667,223,445,89,42,222]
+print('Original array: ', arr)
+quickSort(arr,0,len(arr)-1)
+print('sorted array: ', arr)
+
+Original array:  [11, 44, 63, 23, 45, 667, 223, 445, 89, 42, 222]
+sorted array:  [11, 23, 42, 44, 45, 63, 89, 222, 223, 445, 667]
+\end{lstlisting}
+\section*{Complexity Analysis}
+Time Complexity:
+\begin{itemize}
+    \item BestCase/AvegrageCase: $O(n \log n)$
+    \item WorstCase: $O(n^2)$
+\end{itemize}
+Space Complexity:
+\begin{itemize}
+    \item BestCase/AvegrageCase: $O( \log n)$
+    \item WorstCase: $O(n)$
+\end{itemize}
+}
+\vspace{0.1mm}
+\begin{center}
+    \LARGE\textbf{HeapSort Algorithm}\end{center}
+{\normalsize
+\section*{Objective}
+\begin{itemize}
+    \item The primary objective of HeapSort algoritm is to consistently sort data in $O(n \log n)$ for best,average,worst time complexity.
+    \item To be highly memory efficient because it only need $O(1)$ auxillary space.
+    \item To provide a stable upper bound on execution time, which is critical for real-time systems.
+\end{itemize}
+
+\section*{Theory}
+\paragraph{} 
+Heap Sort is a comparison-based sorting algorithm based on the Binary Heap data structure.The features of HeapSort are:
+\vspace{0.1mm}
+\begin{itemize}
+    \item It is an optimized version of selection sort.
+    \item The algorithm repeatedly finds the maximum (or minimum) element and swaps it with the last (or first) element.
+    \item Using a binary heap allows efficient access to the max (or min) element in O(log n) time instead of $O(n)$.
+    \item Overall, Heap Sort achieves a time complexity of $O(n \log n)$.
+Base Case: The recursion stops when there is only one element left in the sub-array, as a single element is already sorted.
+\end{itemize}
+\pagebreak
+\begin{algorithm}
+\caption{Heap Sort}
+\begin{algorithmic}[1]
+
+\Procedure{MaxHeapify}{$A, n, i$}
+    \State $largest \gets i$
+    \State $l \gets 2 \times i$
+    \State $r \gets 2 \times i + 1$
+
+    \If{$l \le n$ \textbf{and} $A[l] > A[largest]$}
+        \State $largest \gets l$
+    \EndIf
+
+    \If{$r \le n$ \textbf{and} $A[r] > A[largest]$}
+        \State $largest \gets r$
+    \EndIf
+
+    \If{$largest \ne i$}
+        \State Swap($A[i],A[largest]$)
+        \State \Call{MaxHeapify}{$A,n,largest$}
+    \EndIf
+\EndProcedure
+
+\Procedure{HeapSort}{$A,n$}
+    \For{$i \gets \lfloor n/2 \rfloor$ \textbf{to} $1$ \textbf{step} $-1$}
+        \State \Call{MaxHeapify}{$A,n,i$}
+    \EndFor
+
+    \For{$i \gets n$ \textbf{to} $1$ \textbf{step} $-1$}
+        \State Swap($A[1],A[i]$)
+        \State \Call{MaxHeapify}{$A,i-1,1$}
+    \EndFor
+
+    \State \Return $A[1:n]$
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+\section*{Python Code}
+\begin{lstlisting}[={}]
+def MaxHeapify(A,n,i):
+    largest=i
+    l=2*i
+    r=(2*i)+1
+    
+    if (l<=n and A[l]>A[largest]):
+        largest=l
+    if (r<=n and A[r]>A[largest]):
+        largest=r
+    
+    if largest!=i:
+        A[i], A[largest] = A[largest], A[i]
+        MaxHeapify(A,n,largest)
+
+def HeapSort(A,n):
+    for i in range(n//2,0,-1):
+        MaxHeapify(A,n,i)
+    for i in range(n,0,-1):
+        A[1],A[i]=A[i],A[1]
+        MaxHeapify(A,i-1,1)
+    return A[1:]    
+A = [None,4, 10, 3, 5, 1] # using dummy index
+sorted_A = HeapSort(A, len(A) - 1)
+print(sorted_A)
+\end{lstlisting}
+\subsection*{Output}
+\begin{lstlisting}
+A = [None,4, 10, 3, 5, 1] # using dummy index
+sorted_A = HeapSort(A, len(A) - 1)
+print("The sorted array is : ",sorted_A)
+
+The sorted array is : [1, 3, 4, 5, 10]
+\end{lstlisting}  
+\section*{Complexity Analysis}
+Time Complexity:
+\begin{itemize}
+    \item BestCase/AvegrageCase/WorstCase: $O(n \log n)$
+\end{itemize}
+Space Complexity:
+\begin{itemize}
+    \item Auxillary heap construction: $O(1)$
+    \item Recursive heapify: $O( \log n)$
+\end{itemize}
+\section*{Discussion}
+
+Quick Sort and Heap Sort were implemented and analyzed. Quick Sort uses the divide-and-conquer technique and provides an average time complexity of $O(n \log n)$, but its worst-case time complexity is $O(n^2)$. Heap Sort builds a max heap and guarantees $O(n \log n)$ time complexity in all cases while requiring only constant auxiliary space.
+
+\section*{Conclusion}
+
+Both Quick Sort and Heap Sort are efficient sorting algorithms. Quick Sort is generally faster in the average case, whereas Heap Sort provides consistent $O(n \log n)$ performance with lower memory usage. The choice of algorithm depends on the application's performance and memory requirements.
+
+}
+\end{document}
