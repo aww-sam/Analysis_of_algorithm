@@ -15,4 +15,4 @@ weights = [2, 3, 4, 5]
 values = [3, 4, 5, 6]
 capacity = 5
 
-print(binary_knapsack(weights, values, capacity))
+print("The maximum profit is : ",binary_knapsack(weights, values, capacity))
