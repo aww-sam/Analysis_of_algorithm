@@ -35,7 +35,8 @@ Floyd–Warshall Algorithm
 
 \vspace{0.1mm}
 \begin{center}
-    \LARGE\textbf{Floyd-Warshall Algorithm}\end{center}
+    \LARGE\textbf{\underline{Floyd-Warshall Algorithm}}
+\end{center}
 
 
 {\normalsize
@@ -136,4 +137,86 @@ Space Complexity:
 \end{itemize}
 }
 
+\vspace{0.1mm}
+\begin{center}
+    \LARGE\textbf{\underline{0/1 Knapsack Problem}}\end{center}
+{\normalsize
+\section*{Objective}
+\begin{itemize}
+    \item The primary goal is to select a subset of items that yields the highest possible profit or value. Mathematically, the objective is to maximize: \(\sum_{i=1}^{n} p_i x_i\)
+    \item The total weight of all chosen items must never exceed the maximum carrying capacity of the knapsack.
+    \item Unlike the fractional knapsack problem, an item cannot be broken into smaller pieces. The item must either be taken entirely or left completely behind.
+\end{itemize}
+
+\section*{Theory}
+\paragraph{} 
+Given two arrays, val[] and wt[], where each element represents the value and weight of an item respectively, also given an integer W representing the maximum capacity of the knapsack (the total weight it can hold).Put the items into the knapsack such that the sum of values associated with them is the maximum possible, without exceeding the capacity W.
+\section*{Algorithm}
+\begin{algorithm}
+\caption{Binary Knapsack (0/1 Knapsack)}
+\begin{algorithmic}[1]
+\Function{BinaryKnapsack}{$weights,\ values,\ capacity$}
+    \State $n \gets \text{length}(weights)$
+    \State Create a table $dp[0 \dots n][0 \dots capacity]$
+    \State Initialize all elements of $dp$ to $0$
+
+    \For{$i \gets 1$ to $n$}
+        \For{$w \gets 0$ to $capacity$}
+            \State $dp[i][w] \gets dp[i-1][w]$
+            \If{$weights[i-1] \leq w$}
+                \State $dp[i][w] \gets \max(dp[i][w],\ dp[i-1][w-weights[i-1]] + values[i-1])$
+            \EndIf
+        \EndFor
+    \EndFor
+
+    \State \Return $dp[n][capacity]$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+\pagebreak
+\section*{Python Code}
+\begin{lstlisting}[={}]
+def binary_knapsack(weights, values, capacity):
+    n = len(weights)
+    dp = [[0] * (capacity + 1) for _ in range(n + 1)]
+
+    for i in range(1, n + 1):
+        for w in range(capacity + 1):
+            dp[i][w] = dp[i - 1][w]
+            if weights[i - 1] <= w:
+                dp[i][w] = max(dp[i][w], dp[i - 1][w - weights[i - 1]] + values[i - 1])
+
+    return dp[n][capacity]
+
+
+\end{lstlisting}
+\subsection*{Output}
+\begin{lstlisting}
+weights = [2, 3, 4, 5]
+values = [3, 4, 5, 6]
+capacity = 5
+
+print("The maximum profit is : ",binary_knapsack(weights, values, capacity))
+
+The maximum profit is :  7
+\end{lstlisting}
+
+\section*{Complexity Analysis}
+Time Complexity:
+\begin{itemize}
+    \item $O(n * M)$
+\end{itemize}
+Space Complexity:
+\begin{itemize}
+    \item $O(n * M)$
+\end{itemize}
+\section*{Discussion}
+
+The Floyd-Warshall and 0/1 Knapsack algorithms use dynamic programming to solve problems efficiently by storing the results of smaller subproblems. The Floyd-Warshall algorithm finds the shortest paths between all pairs of vertices by updating the distance matrix using each vertex as an intermediate point. It is simple to implement and works correctly for graphs with negative edge weights if there are no negative cycles. The 0/1 Knapsack algorithm finds the maximum value that can be obtained without exceeding the given capacity by building a dynamic programming table. Both algorithms produce optimal results but require additional memory for storing intermediate values.
+
+\section*{Conclusion}
+
+In this practical, the Floyd-Warshall and 0/1 Knapsack algorithms were successfully implemented and tested. The outputs obtained were correct and matched the expected results. This practical showed how dynamic programming improves efficiency by reusing previously computed results, making it a useful technique for solving optimization and graph-related problems.
+
+}
 \end{document}
