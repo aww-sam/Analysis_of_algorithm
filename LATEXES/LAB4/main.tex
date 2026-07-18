@@ -1,0 +1,139 @@
+\documentclass{article}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amsmath}
+
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red},
+    showstringspaces=false,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    breaklines=true
+}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper,top=0.8in,bottom=1.0in,left=1.0in]{geometry}
+
+\author{}
+\date{}
+\title{\textbf{Practical 4: Implementation and
+complexity analysis of
+algorithms based on dynamic
+programming.
+Floyd–Warshall Algorithm
+(All-Pairs Shortest Paths)}}
+
+\begin{document}
+\maketitle
+
+\vspace{0.1mm}
+\begin{center}
+    \LARGE\textbf{Floyd-Warshall Algorithm}\end{center}
+
+
+{\normalsize
+\section*{Objective}
+\begin{itemize}
+    \item Unlike single-source algorithms like Dijkstra or Bellman-Ford, it determines the optimal distance between all possible start and end nodes simultaneously.
+    \item It can correctly compute shortest paths in graphs containing negative edge weights, provided the graph contains no negative cycles.
+    \item t systematically improves path estimates by considering each vertex as a potential intermediate pivot to find shorter routes between other nodes. 
+\end{itemize}
+
+\section*{Theory}
+\paragraph{} 
+The Floyd-Warshall algorithm is a graph algorithm that is deployed to find the shortest path between all the vertices present in a weighted graph. This algorithm is different from other shortest path algorithms; to describe it simply, this algorithm uses each vertex in the graph as a pivot to check if it provides the shortest way to travel from one point to another.
+\paragraph{}
+There are mainly four steps in the algorithm:
+\begin{itemize}
+    \item Construct an adjacency matrix A with all the costs of edges present in the graph. If there is no path between two vertices, mark the value as $\infty$
+    \item Derive another adjacency matrix $A_1$ from $A$ by keeping the first row and the first column of the original adjacency matrix unchanged. For the remaining entries, denoted by $A_1[i,j]$, update them according to the following rule:
+
+\[
+A_1[i,j] =
+\begin{cases}
+A[i,1] + A[1,j], & \text{if } A[i,j] > A[i,1] + A[1,j], \\
+A[i,j], & \text{otherwise.}
+\end{cases}
+\]
+
+In this step, the pivot vertex is the first vertex, i.e., $k = 1$.
+    \item Repeat Step 2 for all the vertices in the graph by changing the k value for every pivot vertex until the final matrix is achieved.
+    \item  The final adjacency matrix obtained is the final solution with all the shortest paths.
+\end{itemize}
+\pagebreak
+\section*{Algorithm}
+\begin{algorithm}
+\caption{Quick Sort}
+\begin{algorithmic}[1]
+
+\Procedure{FloydWarshall}{$W, n$}
+    \State $D \gets W$
+    \For{$k \gets 0$ to $n-1$}
+        \For{$i \gets 0$ to $n-1$}
+            \For{$j \gets 0$ to $n-1$}
+                \If{$D[i][k] + D[k][j] < D[i][j]$}
+                    \State $D[i][j] \gets D[i][k] + D[k][j]$
+                \EndIf
+            \EndFor
+        \EndFor
+    \EndFor
+    \State \Return $D$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\section*{Python Code}
+\begin{lstlisting}[={}]
+def Floyd_warsall(w, n):
+    D = [row[:] for row in w]
+
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                if D[i][k] + D[k][j] < D[i][j]:
+                    D[i][j] = D[i][k] + D[k][j]
+    return D
+\end{lstlisting}
+
+\subsection*{Output}
+\begin{lstlisting}
+INF = float('inf')
+n = 4
+W = [
+    [0, INF, 3, INF],
+    [2, 0, INF, INF],
+    [INF, 7, 0, 1],
+    [6, INF, INF, 0]
+]
+
+d = Floyd_warsall(W, n)
+for i in range(n):
+    for j in range(n):
+        print(d[i][j], end='\t')
+    print()
+
+0       10      3       4
+2       0       5       6
+7       7       0       1
+6       16      9       0
+\end{lstlisting}
+\pagebreak
+\section*{Complexity Analysis}
+Time Complexity:
+\begin{itemize}
+    \item $O(n^3)$
+\end{itemize}
+Space Complexity:
+\begin{itemize}
+    \item $O(n^2)$
+\end{itemize}
+}
+
+\end{document}
